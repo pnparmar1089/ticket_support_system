@@ -7,10 +7,10 @@ export default function page() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/admin/login"); // Redirect to login if no token found
+      router.push("/user/login"); // Redirect to login if no token found
       return;
     }}, []);
   return (
-    <div>admin home Page</div>
+    <div>Home Page</div>
   )
 }

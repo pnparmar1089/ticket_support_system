@@ -47,7 +47,7 @@ function Page() {
 
     const fetchIssues = async () => {
       try {
-        const response = await axios.get("/api/issue");
+        const response = await axios.get("/api/admin/issue");
         setIssues(response.data);
       } catch (error) {
         toast({
@@ -68,7 +68,7 @@ function Page() {
       return;
     }
     try {
-      const response = await axios.post("/api/issue", { name });
+      const response = await axios.post("/api/admin/issue", { name });
 
       if (response.status === 201) {
         toast({
@@ -98,7 +98,7 @@ function Page() {
       return;
     }
     try {
-      const response = await axios.put("/api/issue", { id: issue._id, show: !issue.show });
+      const response = await axios.put("/api/admin/issue", { id: issue._id, show: !issue.show });
 
       if (response.status === 200) {
         toast({
@@ -138,7 +138,7 @@ function Page() {
     e.preventDefault();
 
     try {
-      const response = await axios.put("/api/issue", { id: selectedIssue._id, name });
+      const response = await axios.put("/api/admin/issue", { id: selectedIssue._id, name });
 
       if (response.status === 200) {
         toast({
@@ -178,7 +178,7 @@ function Page() {
       return;
     }
     try {
-      const response = await axios.delete("/api/issue", { data: { id: issueToDelete._id } });
+      const response = await axios.delete("/api/admin/issue", { data: { id: issueToDelete._id } });
 
       if (response.status === 200) {
         toast({

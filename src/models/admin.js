@@ -1,10 +1,10 @@
-// models/user.js
+// models/admin.js
 
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-const userSchema = new mongoose.Schema({
-  username: {
+const adminSchema = new mongoose.Schema({
+  adminname: {
     type: String,
     required: true,
     unique: true,
@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
 });
 
 // Hash password before saving
-userSchema.pre('save', async function (next) {
+adminSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
@@ -25,6 +25,6 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-const User = mongoose.models.User || mongoose.model('User', userSchema);
+const Admin = mongoose.models.Admin || mongoose.model('Admin', adminSchema);
 
-export default User;
+export default Admin;

@@ -1,4 +1,4 @@
-// pages/admin/login.js
+// pages/user/login.js
 "use client";
 
 import { useState, useContext } from 'react';
@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { AuthContext } from '@/app/admin/context/auth-context';
+import { AuthContext } from '@/app/user/context/auth-context';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -19,7 +19,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/admin/auth', { username, password });
+      const response = await axios.post('/api/user/auth', { username, password });
       const { token } = response.data;
       login(token);  // Set authentication state
     } catch (error) {
@@ -36,7 +36,7 @@ export default function LoginPage() {
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Log In</CardTitle>
-          <CardDescription>Log in Admin Only</CardDescription>
+          <CardDescription>Log in user Only</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>

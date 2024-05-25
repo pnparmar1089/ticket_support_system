@@ -24,9 +24,9 @@ import {
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
 import Link from "next/link";
-import { AuthContext } from '@/context/auth-context';
+import { AuthContext } from '@/app/admin/context/auth-context';
 
-export function Navbar() {
+export function AdminNavbar() {
   const { setTheme } = useTheme();
   const router = useRouter();
   const { isAuthenticated, logout } = useContext(AuthContext);
@@ -34,7 +34,7 @@ export function Navbar() {
   const menus = isAuthenticated ? [
     { title: "Home", path: "/admin" },
     { title: "Issue", path: "/admin/issue" },
-  ] : [{ title: "", path: "/" }];
+  ] : [{ title: "", path: "/admin" }];
 
   return (
     <nav className="mt-5 m-2 flex justify-center items-center">
