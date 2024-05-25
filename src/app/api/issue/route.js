@@ -1,7 +1,6 @@
-// src/app/api/issue/route.js
 
-import { connectToDatabase } from '@/utils/mongodb';
-import Issue from '@/models/Issue';
+import  connectToDatabase  from '@/utils/mongodb';
+import issue from '@/models/issue';
 
 export async function POST(req) {
   try {
@@ -16,10 +15,10 @@ export async function POST(req) {
       });
     }
 
-    const newIssue = new Issue({ name });
-    await newIssue.save();
+    const newissue = new issue({ name });
+    await newissue.save();
 
-    return new Response(JSON.stringify(newIssue), {
+    return new Response(JSON.stringify(newissue), {
       status: 201,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -34,7 +33,7 @@ export async function POST(req) {
 export async function GET() {
   try {
     await connectToDatabase();
-    const issues = await Issue.find({});
+    const issues = await issue.find({});
     return new Response(JSON.stringify(issues), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
@@ -51,8 +50,8 @@ export async function DELETE(req) {
   try {
     await connectToDatabase();
     const { id } = await req.json();
-    await Issue.findByIdAndDelete(id);
-    return new Response(JSON.stringify({ message: 'Issue deleted successfully' }), {
+    await issue.findByIdAndDelete(id);
+    return new Response(JSON.stringify({ message: 'issue deleted successfully' }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -67,9 +66,12 @@ export async function DELETE(req) {
 export async function PUT(req) {
   try {
     await connectToDatabase();
-    const { id, name } = await req.json();
-    const updatedIssue = await Issue.findByIdAndUpdate(id, { name }, { new: true });
-    return new Response(JSON.stringify(updatedIssue), {
+    const { id, name, show } = await req.json();
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (show !== undefined) updateData.show = show;
+    const updatedissue = await issue.findByIdAndUpdate(id, updateData, { new: true });
+    return new Response(JSON.stringify(updatedissue), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -80,3 +82,4 @@ export async function PUT(req) {
     });
   }
 }
+
