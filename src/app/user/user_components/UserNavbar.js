@@ -22,7 +22,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "./ui/navigation-menu";
+} from "@/components/ui/navigation-menu";
 import Link from "next/link";
 import { AuthContext } from '@/app/user/context/auth-context';
 

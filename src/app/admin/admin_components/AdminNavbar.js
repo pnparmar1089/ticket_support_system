@@ -22,7 +22,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "./ui/navigation-menu";
+} from "@/components/ui/navigation-menu";
 import Link from "next/link";
 import { AuthContext } from '@/app/admin/context/auth-context';
 
@@ -34,6 +34,7 @@ export function AdminNavbar() {
   const menus = isAuthenticated ? [
     { title: "Home", path: "/admin" },
     { title: "Issue", path: "/admin/issue" },
+    { title: "Ticket", path: "/admin/ticket" },
   ] : [{ title: "", path: "/admin" }];
 
   return (
