@@ -1,7 +1,7 @@
 // pages/user/login.js
 "use client";
 
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -15,11 +15,19 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
 
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!!token) {
+      router.push("/user/"); // Redirect to login if no token found
+      return;
+    }}, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/user/auth', { username, password });
+      const response = await axios.post('/api/user/login', { username, password });
       const { token } = response.data;
       login(token);  // Set authentication state
      

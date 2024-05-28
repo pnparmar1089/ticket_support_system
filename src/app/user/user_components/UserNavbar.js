@@ -52,11 +52,11 @@ export function UserNavbar() {
 
           {isAuthenticated && (
             <NavigationMenuItem key="logout">
-              <Link href="/user/login" onClick={logout} passHref>
+              <Button variant="link"  onClick={logout} passHref legacyBehavior>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Log Out
                 </NavigationMenuLink>
-              </Link>
+              </Button>
             </NavigationMenuItem>
           )}
 

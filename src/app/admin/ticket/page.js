@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
 import {
   Card,
@@ -13,29 +12,28 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-
+import { AuthContext } from '@/app/admin/context/auth-context';
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
 
 function Page() {
   
   const [tickets, settickets] = useState([]); 
   const { toast } = useToast();
-  const router = useRouter();
+
+  const { checkauth, ispname } = useContext(AuthContext);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/user/login"); // Redirect to login if no token found
-      return;
-    }
+    checkauth();
 
-    
 
 
     const fetchtickets = async () => {
       try {
-        const response = await axios.get("/api/user/ticket");
+        const response = await axios.get("/api/admin/ticket",{
+          params: {
+            isp_name: ispname
+          }});
+     
         settickets(response.data);
       } catch (error) {
         toast({
@@ -67,7 +65,7 @@ function Page() {
     
    
 
-        <h2 className="text-xl text-center font-bold my-4">Open Tickets</h2>
+        <h2 className="text-xl text-center font-bold my-4">Open Tickets </h2>
       <div className="flex flex-wrap justify-center items-center">
 
         {tickets.map((ticket) => ( 

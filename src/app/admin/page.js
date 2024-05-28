@@ -1,16 +1,21 @@
 "use client"
-import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
+import { AuthContext } from '@/app/admin/context/auth-context';
 
 export default function page() {
-  const router = useRouter();
+ 
+  const { checkauth,username, email, phone_num, ispname } = useContext(AuthContext);
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/admin/login"); // Redirect to login if no token found
-      return;
-    }}, []);
+    checkauth();
+  }, []);
   return (
-    <div>admin home Page</div>
+    <div>admin home Page
+      <div>
+      <p>Isp name: {ispname}</p>
+        <p>username: {username}</p>
+        <p>email: {email}</p>
+        <p>phone: {phone_num}</p>
+      </div>
+    </div>
   )
 }

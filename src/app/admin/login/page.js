@@ -19,7 +19,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/admin/auth', { username, password });
+      const response = await axios.post('/api/admin/login', { username, password });
       const { token } = response.data;
       login(token);  // Set authentication state
     } catch (error) {

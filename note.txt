@@ -1,1 +1,5 @@
  log in --> store token in db --> panding
+
+tiket stues and show condison
+
+validestion in all form

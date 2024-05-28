@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const adminSchema = new mongoose.Schema({
-  adminname: {
+  username: {
     type: String,
     required: true,
     unique: true,
@@ -28,6 +28,10 @@ const adminSchema = new mongoose.Schema({
   isp_name:{
     type: String,
     required: true,
+  },
+  tokens: {
+    type: [String],
+    default: []
   }
 });
 

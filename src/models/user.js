@@ -24,6 +24,14 @@ const userSchema = new mongoose.Schema({
   Phone_num:{
     type: String,
     required: true,
+  },
+  isp_name:{
+    type: String,
+    required: true,
+  },
+  tokens: {
+    type: [String],
+    default: []
   }
 });
 

@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
 import {
   Card,
@@ -28,6 +27,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { AuthContext } from '@/app/user/context/auth-context';
 
 function Page() {
   const [issues, setIssues] = useState([]);
@@ -38,14 +38,14 @@ function Page() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const { toast } = useToast();
-  const router = useRouter();
+
+  const { checkauth,username } = useContext(AuthContext);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/user/login"); // Redirect to login if no token found
-      return;
-    }
+   
+    
+    checkauth();
+
 
     const fetchIssues = async () => {
       try {
@@ -62,7 +62,11 @@ function Page() {
 
     const fetchtickets = async () => {
       try {
-        const response = await axios.get("/api/user/ticket");
+        const response = await axios.get("/api/user/ticket",{
+        params: {
+          username: username
+        }});
+        
         settickets(response.data);
       } catch (error) {
         toast({
@@ -92,7 +96,9 @@ function Page() {
         name: selectedIssue.name,
         description,
         date,
-        time
+        time,
+        username:username,
+        isp_name:ispname
       });
 
       toast({
@@ -158,7 +164,7 @@ function Page() {
           </Dialog>
         ))}
       </div>
-      {tickets &&
+      {tickets && 
       <>
       <Separator className="my-3" />
 

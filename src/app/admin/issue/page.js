@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-
+import { AuthContext } from '@/app/admin/context/auth-context';
 function Page() {
   const [name, setName] = useState("");
   const [issues, setIssues] = useState([]);
@@ -36,14 +36,10 @@ function Page() {
   const [issueToDelete, setIssueToDelete] = useState(null);
   const { toast } = useToast();
   const router = useRouter();
-
+  const { checkauth } = useContext(AuthContext);
   useEffect(() => {
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/admin/login"); // Redirect to login if no token found
-      return;
-    }
+    checkauth();
 
     const fetchIssues = async () => {
       try {

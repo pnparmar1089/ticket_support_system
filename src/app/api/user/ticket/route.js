@@ -4,14 +4,16 @@ import ticket from '@/models/ticket';
 export  async function POST(req, res) {
   await connectToDatabase();
      const body = await req.json();
-    const { name, description, date, time } = body;
+    const { name, description, date, time, username, isp_name } = body;
 
     try {
       const newticket = new ticket({
         name,
         description,
         date,
-        time
+        time,
+        username,
+        isp_name
       });
 
       await newticket.save();
@@ -30,10 +32,13 @@ export  async function POST(req, res) {
   } 
 
 
-  export async function GET() {
+  export async function GET(req) {
     try {
+      const url = new URL(req.url);
+      const username = url.searchParams.get('username');
+     
       await connectToDatabase();
-      const tickets = await ticket.find();
+      const tickets = await ticket.find({username});
       return new Response(JSON.stringify(tickets), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
