@@ -36,14 +36,17 @@ function Page() {
   const [issueToDelete, setIssueToDelete] = useState(null);
   const { toast } = useToast();
   const router = useRouter();
-  const { checkauth } = useContext(AuthContext);
+  const { checkauth,ispname } = useContext(AuthContext);
   useEffect(() => {
 
     checkauth();
 
     const fetchIssues = async () => {
       try {
-        const response = await axios.get("/api/admin/issue");
+        const response = await axios.get("/api/admin/issue",{
+          params: {
+            isp_name: ispname
+          }});
         setIssues(response.data);
       } catch (error) {
         toast({
@@ -64,7 +67,7 @@ function Page() {
       return;
     }
     try {
-      const response = await axios.post("/api/admin/issue", { name });
+      const response = await axios.post("/api/admin/issue", { name,ispname });
 
       if (response.status === 201) {
         toast({

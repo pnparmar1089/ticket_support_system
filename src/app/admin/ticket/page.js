@@ -14,6 +14,9 @@ import {
 
 import { AuthContext } from '@/app/admin/context/auth-context';
 import { useToast } from "@/components/ui/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area"
+
+
 
 function Page() {
   
@@ -77,7 +80,11 @@ function Page() {
           </CardHeader>
           <CardContent>
             <p>{ticket.name}</p>
-            <p>{ticket.description}</p>
+            
+
+            <ScrollArea className="h-[150px] w-[300px] p-4">
+                {ticket.description}
+</ScrollArea>
             
           </CardContent>
           <CardFooter>

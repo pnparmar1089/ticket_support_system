@@ -6,7 +6,7 @@ export async function POST(req) {
   try {
     await connectToDatabase();
 
-    const { name } = await req.json();
+    const { name,ispname } = await req.json();
 
     if (!name) {
       return new Response(JSON.stringify({ error: 'Name is required' }), {
@@ -15,7 +15,7 @@ export async function POST(req) {
       });
     }
 
-    const newissue = new issue({ name });
+    const newissue = new issue({ name,isp_name:ispname });
     await newissue.save();
 
     return new Response(JSON.stringify(newissue), {
@@ -23,6 +23,7 @@ export async function POST(req) {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
+    console.log(error)
     return new Response(JSON.stringify({ error: 'Error saving issue' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
@@ -30,10 +31,12 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
+export async function GET(req) {
   try {
+    const url = new URL(req.url);
+      const isp_name = url.searchParams.get('isp_name');
     await connectToDatabase();
-    const issues = await issue.find({});
+    const issues = await issue.find({isp_name});
     return new Response(JSON.stringify(issues), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

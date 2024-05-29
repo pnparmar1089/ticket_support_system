@@ -11,6 +11,7 @@ const issueSchema = new mongoose.Schema({
     type: Boolean,
     default: false, // This sets the default value of 'show' to false
   },
+  isp_name: {type: String, required: true},
 }, {
   timestamps: true, // This adds createdAt and updatedAt timestamps
 });

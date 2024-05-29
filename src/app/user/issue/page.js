@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback, useMemo } from "react";
 import axios from "axios";
 
 import {
@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea"
+import { Textarea } from "@/components/ui/textarea";
 
 import {
   Dialog,
@@ -21,84 +21,88 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { AuthContext } from '@/app/user/context/auth-context';
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 function Page() {
   const [issues, setIssues] = useState([]);
-  const [tickets, settickets] = useState([]);
+  const [tickets, setTickets] = useState([]);
   const [currentDate, setCurrentDate] = useState('');
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  const { checkauth,username } = useContext(AuthContext);
+  const { checkauth, username, ispname } = useContext(AuthContext);
+
+  const fetchIssues = useCallback(async () => {
+    try {
+      const response = await axios.get("/api/user/issue",{
+        params: {
+          isp_name: ispname
+        }});
+      setIssues(response.data);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "Failed to load Issues!",
+      });
+    }
+  }, [toast]);
+
+  const fetchTickets = useCallback(async () => {
+    try {
+      const response = await axios.get("/api/user/ticket", {
+        params: { username },
+      });
+      setTickets(response.data);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "Failed to load Tickets!",
+      });
+    }
+  }, [toast, username]);
 
   useEffect(() => {
-   
-    
     checkauth();
-
-
-    const fetchIssues = async () => {
-      try {
-        const response = await axios.get("/api/user/issue");
-        setIssues(response.data);
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          description: "Failed to load Issues!",
-        });
-      }
-    };
-
-
-    const fetchtickets = async () => {
-      try {
-        const response = await axios.get("/api/user/ticket",{
-        params: {
-          username: username
-        }});
-        
-        settickets(response.data);
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          description: "Failed to load Tickets!",
-        });
-      }
-    };
-
-    fetchtickets();
+    fetchTickets();
     fetchIssues();
-
-    
-  }, []);
+  }, [checkauth, fetchIssues, fetchTickets]);
 
   useEffect(() => {
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0'); 
     setCurrentDate(`${year}-${month}-${day}`);
   }, []);
 
   const handleSubmit = async () => {
+    if (!selectedIssue || !description || !date || !time) {
+      toast({
+        variant: "destructive",
+        description: "Please fill in all fields!",
+      });
+      return;
+    }
+
     try {
       await axios.post("/api/user/ticket/", {
         name: selectedIssue.name,
         description,
         date,
         time,
-        username:username,
-        isp_name:ispname
+        username,
+        isp_name: ispname,
       });
 
       toast({
@@ -110,6 +114,8 @@ function Page() {
       setDescription('');
       setDate('');
       setTime('');
+      setIsDialogOpen(false);  // Close the dialog
+      fetchTickets();  // Fetch updated tickets list
     } catch (error) {
       toast({
         variant: "destructive",
@@ -121,10 +127,13 @@ function Page() {
   const formatDate = (isoString) => {
     const date = new Date(isoString);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${day}-${month}-${year}`;
   };
+
+  // Memoize the open issue names
+  const openIssueNames = useMemo(() => new Set(tickets.map(ticket => ticket.name)), [tickets]);
 
   return (
     <main className="flex justify-center items-center flex-col p-2 px-4">
@@ -132,9 +141,9 @@ function Page() {
 
       <div className="flex flex-wrap justify-center items-center">
         {issues.map((issue) => (
-          <Dialog key={issue._id} onOpenChange={() => setSelectedIssue(issue)}>
-            <DialogTrigger>
-              <Card className="m-5">
+          <Dialog key={issue._id} open={isDialogOpen && selectedIssue?._id === issue._id} onOpenChange={() => setIsDialogOpen(!isDialogOpen)}>
+            <DialogTrigger onClick={() => { setSelectedIssue(issue); setIsDialogOpen(true); }} disabled={openIssueNames.has(issue.name)}>
+              <Card className={`m-5 ${openIssueNames.has(issue.name) ? 'opacity-50' : ''}`} aria-disabled={openIssueNames.has(issue.name)}>
                 <CardHeader>
                   <CardTitle className="text-xl">{issue.name}</CardTitle>
                 </CardHeader>
@@ -153,7 +162,7 @@ function Page() {
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
-                <Button variant="secondary">
+                <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>
                   Cancel
                 </Button>
                 <Button onClick={handleSubmit}>
@@ -164,35 +173,31 @@ function Page() {
           </Dialog>
         ))}
       </div>
-      {tickets && 
+      {tickets.length > 0 && 
       <>
-      <Separator className="my-3" />
-
+        <Separator className="my-3" />
         <h2 className="text-xl text-center font-bold my-4">Previously Open Tickets</h2>
-      <div className="flex flex-wrap justify-center items-center">
-
-        {tickets.map((ticket) => ( 
-            <Card className="m-5">
-            
-          <CardHeader>
-            <CardDescription>number</CardDescription>
-            <CardDescription>{formatDate(ticket.createdAt)}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>{ticket.name}</p>
-            <p>{ticket.description}</p>
-            
-          </CardContent>
-          <CardFooter>
-          <p>Date: {ticket.date} , Time: {ticket.time}</p>
-            
-          </CardFooter>
-        </Card>
-        
-        ))}
-      </div>
+        <div className="flex flex-wrap justify-center items-center">
+          {tickets.map((ticket) => ( 
+            <Card key={ticket._id} className="m-5">
+              <CardHeader>
+                <CardDescription>Ticket number</CardDescription>
+                <CardDescription>{formatDate(ticket.createdAt)}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p>{ticket.name}</p>
+                <ScrollArea className="h-[150px] w-[300px] p-4">
+                  {ticket.description}
+                </ScrollArea>
+              </CardContent>
+              <CardFooter>
+                <p>Date: {ticket.date} , Time: {ticket.time}</p>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
       </>
-}
+      }
     </main>
   );
 }

@@ -1,5 +1,21 @@
- log in --> store token in db --> panding
-
-tiket stues and show condison
+<-- ALL -->
 
 validestion in all form
+
+<-- Issue --> 
+
+store and show issue with isp name ✔️
+
+<-- ticket -->
+
+give some rendom number to ticket
+
+add tiket statues
+
+if ticket is open in one issue then thet option is disable ✔️
+
+add limit in description 
+
+<-- bug -->
+
+not add future date by key board input
