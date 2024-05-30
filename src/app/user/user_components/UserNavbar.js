@@ -31,16 +31,17 @@ export function UserNavbar() {
   const router = useRouter();
   const { isAuthenticated, logout } = useContext(AuthContext);
 
-  const menus = isAuthenticated ? [
+  const menus = [
     { title: "Home", path: "/user" },
     { title: "Issue", path: "/user/issue" },
-  ] : [{ title: "", path: "/user" }];
+  ] 
 
   return (
     <nav className="mt-5 m-2 flex justify-center items-center">
       <NavigationMenu>
         <NavigationMenuList>
-          {menus.map((item, idx) => (
+        {isAuthenticated && (
+          menus.map((item, idx) => (
             <NavigationMenuItem key={idx}>
               <Link href={item.path} passHref legacyBehavior>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -48,7 +49,7 @@ export function UserNavbar() {
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
-          ))}
+          )))}
 
           {isAuthenticated && (
             <NavigationMenuItem key="logout">

@@ -5,11 +5,14 @@ validestion in all form;
 change ui
 
 add user option 
+
 <-- Issue --> 
 
 store and show issue with isp name ✔️
 
 <-- ticket -->
+
+in admin panal show table
 
 give some rendom number to ticket ✔️
 
@@ -20,5 +23,9 @@ if ticket is open in one issue then thet option is disable ✔️
 add limit in description 
 
 <-- bug -->
+
+navbar on log in page ✔️
+
+them toggele
 
 not add future date by key board input
