@@ -4,7 +4,7 @@ validestion in all form;
 
 change ui
 
-add user option 
+add user option ✔️
 
 <-- Issue --> 
 
@@ -12,7 +12,7 @@ store and show issue with isp name ✔️
 
 <-- ticket -->
 
-in admin panal show table
+in admin panal show table ✔️
 
 give some rendom number to ticket ✔️
 

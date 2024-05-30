@@ -8,7 +8,7 @@ import ticket from '@/models/ticket';
       const isp_name = url.searchParams.get('isp_name');
 
       await connectToDatabase();
-      const tickets = await ticket.find({isp_name});
+      const tickets = await ticket.find({isp_name}).sort({createdAt:-1});
       return new Response(JSON.stringify(tickets), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },

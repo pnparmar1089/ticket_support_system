@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { AuthContext } from '@/app/admin/context/auth-context';
+
 function Page() {
   const [name, setName] = useState("");
   const [issues, setIssues] = useState([]);
@@ -36,17 +37,18 @@ function Page() {
   const [issueToDelete, setIssueToDelete] = useState(null);
   const { toast } = useToast();
   const router = useRouter();
-  const { checkauth,ispname } = useContext(AuthContext);
-  useEffect(() => {
+  const { checkauth, ispname } = useContext(AuthContext);
 
+  useEffect(() => {
     checkauth();
 
     const fetchIssues = async () => {
       try {
-        const response = await axios.get("/api/admin/issue",{
+        const response = await axios.get("/api/admin/issue", {
           params: {
-            isp_name: ispname
-          }});
+            isp_name: ispname,
+          },
+        });
         setIssues(response.data);
       } catch (error) {
         toast({
@@ -57,18 +59,18 @@ function Page() {
     };
 
     fetchIssues();
-  }, []);
+  }, [checkauth, ispname, toast]);
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/admin/login"); // Redirect to login if no token found
+      router.push("/admin/login");
       return;
     }
-    try {
-      const response = await axios.post("/api/admin/issue", { name,ispname });
 
+    try {
+      const response = await axios.post("/api/admin/issue", { name, ispname });
       if (response.status === 201) {
         toast({
           description: "Issue saved successfully.",
@@ -93,21 +95,20 @@ function Page() {
   const handleShowToggle = async (issue) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/admin/login"); // Redirect to login if no token found
+      router.push("/admin/login");
       return;
     }
-    try {
-      const response = await axios.put("/api/admin/issue", { id: issue._id, show: !issue.show });
 
+    try {
+      const response = await axios.put("/api/admin/issue", {
+        id: issue._id,
+        show: !issue.show,
+      });
       if (response.status === 200) {
         toast({
           description: "Issue show status updated successfully.",
         });
-        setIssues(
-          issues.map((i) =>
-            i._id === issue._id ? { ...i, show: response.data.show } : i
-          )
-        );
+        setIssues(issues.map((i) => (i._id === issue._id ? { ...i, show: response.data.show } : i)));
       } else {
         toast({
           variant: "destructive",
@@ -129,25 +130,20 @@ function Page() {
   };
 
   const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/admin/login"); // Redirect to login if no token found
+      router.push("/admin/login");
       return;
     }
-    e.preventDefault();
 
     try {
       const response = await axios.put("/api/admin/issue", { id: selectedIssue._id, name });
-
       if (response.status === 200) {
         toast({
           description: "Issue updated successfully.",
         });
-        setIssues(
-          issues.map((issue) =>
-            issue._id === selectedIssue._id ? response.data : issue
-          )
-        );
+        setIssues(issues.map((issue) => (issue._id === selectedIssue._id ? response.data : issue)));
         setSelectedIssue(null);
         setName("");
         setIsUpdateDialogOpen(false);
@@ -173,12 +169,12 @@ function Page() {
   const confirmDelete = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/admin/login"); // Redirect to login if no token found
+      router.push("/admin/login");
       return;
     }
+
     try {
       const response = await axios.delete("/api/admin/issue", { data: { id: issueToDelete._id } });
-
       if (response.status === 200) {
         toast({
           description: "Issue deleted successfully.",
@@ -213,17 +209,17 @@ function Page() {
   };
 
   return (
-    <main className="p-2 px-4">
+    <main>
       <div className="flex items-center justify-end mb-4">
         <Button onClick={handleAddDialogOpen}>Add</Button>
       </div>
+
+      {/* Add Issue Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Add New Issue</DialogTitle>
-            <DialogDescription>
-              Click save when you're done.
-            </DialogDescription>
+            <DialogDescription>Click save when you're done.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleAddSubmit}>
             <div className="grid gap-4 py-4">
@@ -248,13 +244,12 @@ function Page() {
         </DialogContent>
       </Dialog>
 
+      {/* Update Issue Dialog */}
       <Dialog open={isUpdateDialogOpen} onOpenChange={setIsUpdateDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Update Issue</DialogTitle>
-            <DialogDescription>
-              Update the issue details.
-            </DialogDescription>
+            <DialogDescription>Update the issue details.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateSubmit}>
             <div className="grid gap-4 py-4">
@@ -279,6 +274,7 @@ function Page() {
         </DialogContent>
       </Dialog>
 
+      {/* Confirm Delete Dialog */}
       <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -298,8 +294,8 @@ function Page() {
         </DialogContent>
       </Dialog>
 
+      {/* Issues Table */}
       <h2 className="text-xl text-center font-bold mb-4">Issues</h2>
-
       <Table>
         <TableHeader>
           <TableRow>

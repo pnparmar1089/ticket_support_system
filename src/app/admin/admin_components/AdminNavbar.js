@@ -33,8 +33,9 @@ export function AdminNavbar() {
 
   const menus = [
     { title: "Home", path: "/admin" },
-    { title: "Issue", path: "/admin/issue" },
+    { title: "User", path: "/admin/User" },
     { title: "Ticket", path: "/admin/ticket" },
+    { title: "Issue", path: "/admin/issue" },
   ] 
 
   return (
