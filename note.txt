@@ -1,16 +1,19 @@
 <-- ALL -->
 
-validestion in all form
+validestion in all form;
 
+change ui
+
+add user option 
 <-- Issue --> 
 
 store and show issue with isp name ✔️
 
 <-- ticket -->
 
-give some rendom number to ticket
+give some rendom number to ticket ✔️
 
-add tiket statues
+add tiket statues ✔️
 
 if ticket is open in one issue then thet option is disable ✔️
 
