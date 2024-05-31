@@ -61,4 +61,50 @@ import user from '@/models/user';
   }
 
 
+  export async function DELETE(req) {
+    try {
+      await connectToDatabase();
+      const  {id}  = await req.json();
+      await user.findByIdAndDelete(id);
+      return new Response(JSON.stringify({ message: 'user deleted successfully' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } catch (error) {
+      console.log(error)
+      return new Response(JSON.stringify({ error: 'Error deleting user' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+  }  
+
+
+  export async function PUT(req) {
+    try {
+      await connectToDatabase();
   
+      const { id, ...updateData } = await req.json();
+      
+      // Update the user document
+      const updatedUser = await user.findByIdAndUpdate(id, updateData, { new: true });
+      
+      if (!updatedUser) {
+        return new Response(JSON.stringify({ error: "User not found" }), {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+  
+      return new Response(JSON.stringify(updatedUser), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      console.error(error);
+      return new Response(JSON.stringify({ error: "Error updating user" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }

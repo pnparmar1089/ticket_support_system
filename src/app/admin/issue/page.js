@@ -63,11 +63,7 @@ function Page() {
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/admin/login");
-      return;
-    }
+     checkauth();
 
     try {
       const response = await axios.post("/api/admin/issue", { name, ispname });
@@ -93,11 +89,7 @@ function Page() {
   };
 
   const handleShowToggle = async (issue) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/admin/login");
-      return;
-    }
+     checkauth();
 
     try {
       const response = await axios.put("/api/admin/issue", {
@@ -131,11 +123,7 @@ function Page() {
 
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/admin/login");
-      return;
-    }
+     checkauth();
 
     try {
       const response = await axios.put("/api/admin/issue", { id: selectedIssue._id, name });
@@ -167,11 +155,7 @@ function Page() {
   };
 
   const confirmDelete = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/admin/login");
-      return;
-    }
+     checkauth();
 
     try {
       const response = await axios.delete("/api/admin/issue", { data: { id: issueToDelete._id } });
