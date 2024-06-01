@@ -28,7 +28,16 @@
   import { Separator } from "@/components/ui/separator";
   import { AuthContext } from "@/app/user/context/auth-context";
   import { ScrollArea } from "@/components/ui/scroll-area";
-
+  import { useForm, Controller } from "react-hook-form";
+  import { zodResolver } from "@hookform/resolvers/zod";
+  import { z } from "zod";
+  
+  const formSchema = z.object({
+    description: z.string().min(1, "Description is required").max(250, "only 250 characters allowed"),
+    date: z.string().min(1, "Date is required"),
+    time: z.string().min(1, "Time is required")
+  });
+  
   function Page() {
     const [issues, setIssues] = useState([]);
     const [tickets, setTickets] = useState([]);
@@ -39,8 +48,18 @@
     const [time, setTime] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { toast } = useToast();
+    
 
     const { checkauth, username, ispname } = useContext(AuthContext);
+
+    const { control, handleSubmit, reset, formState: { errors } } = useForm({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        description: "",
+        date: "",
+        time: ""
+      }
+    });
 
     const fetchIssues = useCallback(async () => {
       try {
@@ -87,43 +106,41 @@
       setCurrentDate(`${year}-${month}-${day}`);
     }, []);
 
-    const handleSubmit = async () => {
-      if (!selectedIssue || !description || !date || !time) {
-        toast({
-          variant: "destructive",
-          description: "Please fill in all fields!",
-        });
-        return;
-      }
+   
+  const onSubmit = async (data) => {
+    if (!selectedIssue) {
+      toast({
+        variant: "destructive",
+        description: "Please select an issue!",
+      });
+      return;
+    }
 
-      try {
-        await axios.post("/api/user/ticket/", {
-          name: selectedIssue.name,
-          description,
-          date,
-          time,
-          username,
-          isp_name: ispname,
-        });
+    try {
+      await axios.post("/api/user/ticket/", {
+        name: selectedIssue.name,
+        description: data.description,
+        date: data.date,
+        time: data.time,
+        username,
+        isp_name: ispname,
+      });
 
-        toast({
-          variant: "success",
-          description: "Ticket created successfully",
-        });
+      toast({
+        variant: "success",
+        description: "Ticket created successfully",
+      });
 
-        // Reset form fields
-        setDescription("");
-        setDate("");
-        setTime("");
-        setIsDialogOpen(false); // Close the dialog
-        fetchTickets(); // Fetch updated tickets list
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          description: "Failed to create ticket!",
-        });
-      }
-    };
+      reset(); // Reset form fields
+      setIsDialogOpen(false); // Close the dialog
+      fetchTickets(); // Fetch updated tickets list
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "Failed to create ticket!",
+      });
+    }
+  };
 
     const closeTicket = async (ticketId) => {
       try {
@@ -168,65 +185,75 @@
         <div className="flex flex-wrap justify-center items-center">
           {issues.map((issue) => (
             <Dialog
-              key={issue._id}
-              open={isDialogOpen && selectedIssue?._id === issue._id}
-              onOpenChange={() => setIsDialogOpen(!isDialogOpen)}
+            key={issue._id}
+            open={isDialogOpen && selectedIssue?._id === issue._id}
+            onOpenChange={() => setIsDialogOpen(!isDialogOpen)}
+          >
+            <DialogTrigger
+              onClick={() => {
+                setSelectedIssue(issue);
+                setIsDialogOpen(true);
+              }}
+              disabled={openIssueNames.has(issue.name)}
             >
-              <DialogTrigger
-                onClick={() => {
-                  setSelectedIssue(issue);
-                  setIsDialogOpen(true);
-                }}
-                disabled={openIssueNames.has(issue.name)}
+              <Card
+                className={`m-5 ${openIssueNames.has(issue.name) ? "opacity-50" : ""}`}
+                aria-disabled={openIssueNames.has(issue.name)}
               >
-                <Card
-                  className={`m-5 ${
-                    openIssueNames.has(issue.name) ? "opacity-50" : ""
-                  }`}
-                  aria-disabled={openIssueNames.has(issue.name)}
-                >
-                  <CardHeader>
-                    <CardTitle className="text-xl">{issue.name}</CardTitle>
-                  </CardHeader>
-                </Card>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Problem: {issue.name}</DialogTitle>
-                  <DialogDescription>
-                    <p className="text-md mb-3">Give Description</p>
-                    <Textarea
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                    />
-                    <p className="text-md my-3">Add Date</p>
-                    <Input
-                      type="date"
-                      max={currentDate}
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                      className="flex justify-center items-center"
-                    />
-                    <p className="text-md my-3">Add Time</p>
-                    <Input
-                      type="time"
-                      value={time}
-                      onChange={(e) => setTime(e.target.value)}
-                      className="flex justify-center items-center"
-                    />
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <Button
-                    variant="secondary"
-                    onClick={() => setIsDialogOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button onClick={handleSubmit}>Open ticket</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                <CardHeader>
+                  <CardTitle className="text-xl">{issue.name}</CardTitle>
+                </CardHeader>
+              </Card>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Problem: {issue.name}</DialogTitle>
+                <DialogDescription>
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                    <div>
+                      <p className="text-md mb-3">Give Description</p>
+                      <Controller
+                        name="description"
+                        control={control}
+                        render={({ field }) => (
+                          <Textarea {...field} />
+                        )}
+                      />
+                      {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+                    </div>
+                    <div>
+                      <p className="text-md my-3">Add Date</p>
+                      <Controller
+                        name="date"
+                        control={control}
+                        render={({ field }) => (
+                          <Input type="date" max={currentDate} {...field} />
+                        )}
+                      />
+                      {errors.date && <p className="text-red-500">{errors.date.message}</p>}
+                    </div>
+                    <div>
+                      <p className="text-md my-3">Add Time</p>
+                      <Controller
+                        name="time"
+                        control={control}
+                        render={({ field }) => (
+                          <Input type="time" {...field} />
+                        )}
+                      />
+                      {errors.time && <p className="text-red-500">{errors.time.message}</p>}
+                    </div>
+                    <DialogFooter>
+                      <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button type="submit">Open ticket</Button>
+                    </DialogFooter>
+                  </form>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
           ))}
         </div>
         {tickets.length > 0 && (

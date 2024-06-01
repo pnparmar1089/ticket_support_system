@@ -3,10 +3,11 @@ https://flowbite.com/nextjs-admin-dashboard-pro/preview/
 
 <-- ALL -->
 
-validestion in all form;
+validestion in all form;✔️
+    - remaining update user and show error that occur in route.js like username must be unique
 
 change ui
-
+    
 add user option ✔️
 
 <-- Issue --> 
@@ -23,7 +24,7 @@ add tiket statues ✔️
 
 if ticket is open in one issue then thet option is disable ✔️
 
-add limit in description 
+add limit in description ✔️
 
 <-- bug -->
 
