@@ -21,6 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useRouter } from 'next/navigation';
 
 // Define the form schema using Zod
 const formSchema = z.object({
@@ -30,7 +31,7 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   const { login } = useContext(AuthContext);
-
+  const router = useRouter();
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!!token) {

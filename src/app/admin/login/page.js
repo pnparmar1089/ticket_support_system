@@ -20,7 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Router } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   username: z.string().min(2, { message: "Username must be at least 2 characters." }),
@@ -28,6 +28,8 @@ const formSchema = z.object({
 });
 
 export default function LoginPage() {
+  const router = useRouter();
+  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -35,8 +37,9 @@ export default function LoginPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (!!token) {
-      Router.push("/admin/"); // Redirect to user dashboard if token is found
+      router.push("/admin/"); // Redirect to user dashboard if token is found
       return;
     }
   }, []);

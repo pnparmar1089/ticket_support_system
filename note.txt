@@ -6,7 +6,7 @@ https://flowbite.com/nextjs-admin-dashboard-pro/preview/
 validestion in all form;✔️
     - remaining update user and show error that occur in route.js like username must be unique ✔️
 
-change ui
+change ui ✔️
     
 add user option ✔️
 
@@ -30,6 +30,6 @@ add limit in description ✔️
 
 navbar on log in page ✔️
 
-them toggele
+them toggele ✔️
 
 not add future date by key board input
