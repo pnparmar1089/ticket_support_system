@@ -4,7 +4,7 @@ https://flowbite.com/nextjs-admin-dashboard-pro/preview/
 <-- ALL -->
 
 validestion in all form;✔️
-    - remaining update user and show error that occur in route.js like username must be unique
+    - remaining update user and show error that occur in route.js like username must be unique ✔️
 
 change ui
     

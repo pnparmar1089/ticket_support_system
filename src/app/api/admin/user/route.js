@@ -34,6 +34,15 @@ import user from '@/models/user';
           headers: { 'Content-Type': 'application/json' },
         });
       }
+
+      // Check if username already exists
+      const existingUser = await user.findOne({ username });
+      if (existingUser) {
+          return new Response(JSON.stringify({ error: 'Username already exists' }), {
+              status: 400,
+              headers: { 'Content-Type': 'application/json' },
+          });
+      }
   
       // Create a new user
       const newUser = new user({
@@ -85,7 +94,14 @@ import user from '@/models/user';
       await connectToDatabase();
   
       const { id, ...updateData } = await req.json();
-      
+      // Check if username already exists
+      const existingUser = await user.findOne({ username : updateData.username });
+      if (existingUser) {
+          return new Response(JSON.stringify({ error: 'Username already exists' }), {
+              status: 400,
+              headers: { 'Content-Type': 'application/json' },
+          });
+      }
       // Update the user document
       const updatedUser = await user.findByIdAndUpdate(id, updateData, { new: true });
       

@@ -143,11 +143,18 @@ function Page() {
         });
       }
     } catch (error) {
-      toast({
-        variant: "destructive",
-        description: "Failed to add user.",
-      });
+      if ( error.response.data.error === 'Username already exists') {
+        toast({
+          variant: "destructive",
+          description: "Username already exists.",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          description: "Failed to add user.",
+        });
     }
+  }
   };
 
   const handleUpdateSubmit = async (e) => {
@@ -167,12 +174,19 @@ function Page() {
           description: "Failed to update user.",
         });
       }
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        description: "Failed to update user.",
-      });
+    } catch (error){
+      if ( error.response.data.error === 'Username already exists') {
+        toast({
+          variant: "destructive",
+          description: "Username already exists.",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          description: "Failed to add user.",
+        });
     }
+  }
   };
 
   const handleChange = (e) => {
