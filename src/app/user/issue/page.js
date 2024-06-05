@@ -301,6 +301,12 @@
                       Close
                     </Button>}
                   </CardFooter>
+                  <CardFooter className="flex justify-between">
+                  <span className="-mt-5">
+                  Comment : {ticket.comment}
+                  </span>
+                  
+                </CardFooter>
                 </Card>
               ))}
             </div>
