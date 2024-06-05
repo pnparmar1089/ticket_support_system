@@ -19,6 +19,7 @@ const TicketSchema = new mongoose.Schema({
   username: { type: String, required: true },
   isp_name: { type: String, required: true },
   status: { type: String, enum: ['open', 'close', 'working', 'solved'], default: 'open' },
+  comment: {type: String,default:'No'},
   ticketNumber: { type: String, unique: true, default: generateTicketNumber },
   createdAt: { type: Date, default: Date.now }
 });
