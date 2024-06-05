@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 
 const handleUpdate = (data, setUpdateDialogOpen, setCurrentUser) => {
   setCurrentUser(data);
@@ -40,7 +41,13 @@ export const columns = (setUsers, setUpdateDialogOpen, setCurrentUser, setDelete
           }}>
             Delete
           </Button>
+          <Button variant="secondary" asChild>
+          <Link href={`User/${row.original.username}`} variant="secondary"  >
+            View
+          </Link>
+          </Button>
         </div>
+        
       );
     },
   },
