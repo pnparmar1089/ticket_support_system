@@ -75,7 +75,7 @@
           description: "Failed to load Issues!",
         });
       }
-    }, [toast]);
+    }, [toast,ispname]);
 
     const fetchTickets = useCallback(async () => {
       try {
@@ -179,7 +179,7 @@
     return (
       <main className="flex justify-center items-center flex-col p-2 px-4">
         <h2 className="text-xl text-center font-bold mb-4">
-          What's wrong with you?
+          What&apos;s wrong with you?
         </h2>
 
         <div className="flex flex-wrap justify-center items-center">

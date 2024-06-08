@@ -48,7 +48,7 @@ function Page({ params }) {
       }
     };
     fetchUsers();
-  }, [checkauth, ispname, toast]);
+  }, [username,checkauth, ispname, toast]);
 
   const formatDate = (isoString) => {
     const date = new Date(isoString);
@@ -77,7 +77,7 @@ function Page({ params }) {
           <h2 className="text-xl text-center font-bold my-4 ">Tickets</h2>
           <div className="flex flex-wrap justify-center items-center">
             {tickets.map((ticket) => (
-              <Link href={`/admin/ticket/${ticket._id}`}>
+              <Link href={`/admin/ticket/${ticket._id}`} key={ticket._id}>
               <Card key={ticket._id} className="m-5">
                 <CardHeader>
                   <CardDescription>

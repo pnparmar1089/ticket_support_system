@@ -42,7 +42,7 @@ export default function LoginPage() {
       router.push("/admin/"); // Redirect to user dashboard if token is found
       return;
     }
-  }, []);
+  }, );
 
   // Define the form using react-hook-form
   const form = useForm({

@@ -216,7 +216,7 @@ function Page() {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Add New User</DialogTitle>
-            <DialogDescription>Click save when you're done.</DialogDescription>
+            <DialogDescription>Click save when you&apos;re done.</DialogDescription>
           </DialogHeader>
 
           <Form {...form}>
@@ -290,7 +290,7 @@ function Page() {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Update User</DialogTitle>
-            <DialogDescription>Click save when you're done.</DialogDescription>
+            <DialogDescription>Click save when you&apos;re done.</DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleUpdateSubmit}>

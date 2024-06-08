@@ -2,12 +2,12 @@
 import React, { useContext, useEffect } from 'react'
 import { AuthContext } from '@/app/admin/context/auth-context';
 
-export default function page() {
+export default function Page() {
  
   const { checkauth,username, email, phone_num, ispname } = useContext(AuthContext);
   useEffect(() => {
     checkauth();
-  }, []);
+  }, );
   return (
     <div>admin home Page
       <div>

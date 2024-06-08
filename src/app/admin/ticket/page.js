@@ -35,7 +35,7 @@ function Page() {
     };
 
     fetchtickets();
-  }, []);
+  }, );
 
   return (
     <main className="">
