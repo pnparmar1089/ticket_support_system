@@ -292,7 +292,7 @@
                     <span className="font-medium italic">
                       status : {ticket.status}
                     </span>
-                    { ticket.status !== "close" &&
+                    { ticket.status == "open" &&
                     <Button
                       className=""
                       variant="outline"
@@ -301,12 +301,13 @@
                       Close
                     </Button>}
                   </CardFooter>
+                  { ticket.status !== "open" &&
                   <CardFooter className="flex justify-between">
                   <span className="-mt-5">
                   Comment : {ticket.comment}
                   </span>
                   
-                </CardFooter>
+                </CardFooter>}
                 </Card>
               ))}
             </div>
