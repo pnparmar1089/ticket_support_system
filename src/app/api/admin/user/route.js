@@ -2,6 +2,7 @@ import connectToDatabase from "@/utils/mongodb";
 import user from "@/models/user";
 import ticket from "@/models/ticket";
 
+
 export async function GET(req) {
   try {
     const url = new URL(req.url);
@@ -101,7 +102,11 @@ export async function DELETE(req) {
   try {
     await connectToDatabase();
     const { id } = await req.json();
-    await user.findByIdAndDelete(id);
+  
+    const userdata = await user.findOne({_id:id});
+
+    await ticket.deleteMany({username:userdata.username});
+    await user.findByIdAndDelete(id); 
     return new Response(
       JSON.stringify({ message: "user deleted successfully" }),
       {
@@ -134,6 +139,8 @@ export async function PUT(req) {
         }
       );
     }
+    const userdata = await user.findOne({_id:id});
+    await ticket.updateMany({username:userdata.username},{$set:{username:updateData.username}});
     // Update the user document
     const updatedUser = await user.findByIdAndUpdate(id, updateData, {
       new: true,

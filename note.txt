@@ -30,4 +30,6 @@ navbar on log in page ✔️
 
 them toggele ✔️
 
-not add future date by key board input  
+if user delete then their ticket is delete
+
+not add future date by key board input  ✔️

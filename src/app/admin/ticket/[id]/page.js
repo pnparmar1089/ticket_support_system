@@ -105,8 +105,7 @@ function Page({ params }) {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Status</SelectLabel>
-                <SelectItem value="open">Open</SelectItem>
-                <SelectItem value="close">Close</SelectItem>
+                
                 <SelectItem value="working">Working</SelectItem>
                 <SelectItem value="solved">Solved</SelectItem>
               </SelectGroup>
@@ -124,7 +123,7 @@ function Page({ params }) {
           />
         </div>
         
-        <Button onClick={handleSubmit} className="mt-4">Submit</Button>
+        <Button onClick={handleSubmit} className="mt-4" disabled={!comment} >Submit</Button>
       </div>
     </main>
   );
