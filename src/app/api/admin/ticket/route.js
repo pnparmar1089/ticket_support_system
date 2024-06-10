@@ -1,6 +1,7 @@
 import connectToDatabase from '@/utils/mongodb';
 import ticket from '@/models/ticket';
 import User from '@/models/user';
+import axios from 'axios';
 
 
   export async function GET(req) {
@@ -65,6 +66,22 @@ import User from '@/models/user';
       ticketdata.status = status;
       ticketdata.comment = comment;
       await ticketdata.save();
+    //send mail
+    const userdata = await User.find({username:ticketdata.username});
+    const html = `<h2>Hello, ${userdata[0].name}</h2>
+                  <br/>
+                  <h2>Your Ticket  Status :<b>${ticketdata.status} </b></h2>
+                  <h3><strong>Issue Name : </strong>${ticketdata.name} </h3>
+                  <h3><strong>Ticket Number : </strong><i>${ticketdata.ticketNumber} </i></h3>
+                  <h3><strong>comment : </strong>${ticketdata.comment}</h3>`;
+    const email = userdata[0].email;
+    const subject = `TSM Ticket Status :${ticketdata.status}`;
+
+    await axios.post(`${process.env.BASE_URL}/api/sendmail`, {
+      email,
+      subject,
+      html
+    });
   
       return new Response(JSON.stringify({ message: 'Ticket updated successfully', ticketdata }), {
         status: 200,
