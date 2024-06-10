@@ -95,7 +95,8 @@ function Page({ params }) {
         <p className="text-xl font-bold text-center mb-2 mt-6">Contact User</p>
         <p className="text-lg font-semibold mb-2">Phone Number: <Link href={`tel:${user.Phone_num}`} className="font-normal">{user.Phone_num}</Link></p>
         <p className="text-lg font-semibold mb-2">E-Mail: <Link href={`mailto:${user.email}?subject=TMS Ticket Number : ${tickets.ticketNumber}&body=Hello ${user.name}, Your Issue is ${tickets.name}. And Ticket Number : ${tickets.ticketNumber} `} className="font-normal">{user.email}</Link></p>
-      
+      {tickets.status !== 'close' &&
+      <>
         <div className="mt-4">
           <Label htmlFor="status" className="text-lg font-semibold">Status:</Label>
           <Select value={status} onValueChange={(value) => setStatus(value)}>
@@ -124,7 +125,11 @@ function Page({ params }) {
         </div>
         
         <Button onClick={handleSubmit} className="mt-4" disabled={!comment} >Submit</Button>
-      </div>
+      </>
+      }
+
+    </div>
+      
     </main>
   );
 }

@@ -22,7 +22,7 @@ export async function POST(req, res) {
     //send mail
     const userdata = await User.find({username:username});
     
-    const html = `<h2>Hello, ${userdata.name}</h2>
+    const html = `<h2>Hello, ${userdata[0].name}</h2>
                   <br/>
                   <h2>Your Ticket create Successfully.</h2>
                   <h3><strong>Issue Name : </strong>${name} </h3>
@@ -85,11 +85,12 @@ export async function PUT(req) {
     }
 
     tickets.status = status;
+    tickets.comment = "Close By User";
     await tickets.save();
     //send mail
     const userdata = await User.find({username:tickets.username});
     
-    const html = `<h2>Hello, ${userdata.name}</h2>
+    const html = `<h2>Hello, ${userdata[0].name}</h2>
                   <br/>
                   <h2>Your Ticket Closed Successfully.</h2>
                   <h3><strong>Issue Name : </strong>${tickets.name} </h3>
