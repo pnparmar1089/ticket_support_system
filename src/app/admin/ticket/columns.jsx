@@ -39,6 +39,28 @@ export const columns = [
       {
         accessorKey: "status",
         header: "Status",
+        cell: ({ row }) => {  
+          
+            
+            
+            switch (row.getValue("status")) {
+              case 'open':
+                return(<div className="text-blue-800">OPEN</div>)
+                break;
+
+              case 'solved':
+                return(<div className="text-green-600">Solved</div>)
+                break;
+
+              case 'working':
+                return(<div className="text-yellow-600">Working</div>)
+                break;
+              default:
+                return(<div className="">Close</div>)
+                break;
+            }
+          
+        },
       },
       {
         accessorKey: "_id",
