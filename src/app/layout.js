@@ -5,10 +5,16 @@ import { Toaster } from "@/components/ui/toaster"
 
 import { cn } from "@/lib/utils"
 
+
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 })
+export const metadata = {
+  title: "TSM",
+  description: "TSM by pnparmar1089",
+};
+
 
 export default function RootLayout({ children }) {
   return (
