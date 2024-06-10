@@ -172,7 +172,7 @@
 
     // Memoize the open issue names
     const openIssueNames = useMemo(
-      () => new Set(tickets.filter(ticket => ticket.status !== "close").map(ticket => ticket.name)),
+      () => new Set(tickets.filter(ticket => ticket.status == "open").map(ticket => ticket.name)),
       [tickets]
     );
     
