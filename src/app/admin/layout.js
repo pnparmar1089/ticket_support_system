@@ -43,7 +43,7 @@ export default function RootLayout({ children }) {
 }
 
 function AuthenticatedApp({ children }) {
-  const { isAuthenticated, checkauth } = useContext(AuthContext);
+  const { isAuthenticated, checkauth,username, email, phone_num, ispname } = useContext(AuthContext);
 
   useEffect(() => {
     checkauth();
@@ -57,7 +57,7 @@ function AuthenticatedApp({ children }) {
     <div className={gridClass}>
       {isAuthenticated && <Saidbar /> }
       <div className="flex flex-col">
-        <Header />
+        <Header data={{username, email, phone_num, ispname}}/>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           {children}
         </main>

@@ -26,7 +26,7 @@ import { AuthContext } from '@/app/admin/context/auth-context';
 import { usePathname } from "next/navigation";
 
 
-function Header() {
+function Header(props) {
   const { isAuthenticated, logout } = useContext(AuthContext);
   const pathname = usePathname();
 
@@ -84,6 +84,10 @@ function Header() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>ISP Name : {props.data.ispname}</DropdownMenuLabel>
+            <DropdownMenuLabel>Username : {props.data.username}</DropdownMenuLabel>
+            <DropdownMenuLabel>E-Mail : {props.data.email}</DropdownMenuLabel>
+            <DropdownMenuLabel>Phone Num. : {props.data.phone_num}</DropdownMenuLabel>
             <DropdownMenuItem>
               <Link href="/admin/login" onClick={logout} passHref>
                 Log Out
