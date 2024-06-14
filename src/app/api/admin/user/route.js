@@ -129,18 +129,8 @@ export async function PUT(req) {
 
     const { id, ...updateData } = await req.json();
     // Check if username already exists
-    const existingUser = await user.findOne({ username: updateData.username });
-    if (existingUser) {
-      return new Response(
-        JSON.stringify({ error: "Username already exists" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
+  
     const userdata = await user.findOne({_id:id});
-    await ticket.updateMany({username:userdata.username},{$set:{username:updateData.username}});
     // Update the user document
     const updatedUser = await user.findByIdAndUpdate(id, updateData, {
       new: true,

@@ -32,6 +32,7 @@ const formSchema = z.object({
 export default function LoginPage() {
   const { login } = useContext(AuthContext);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!!token) {
@@ -52,6 +53,7 @@ export default function LoginPage() {
   // Define the submit handler
   const handleSubmit = async (values) => {
     try {
+      setLoading(true);
       const response = await axios.post('/api/user/login', values);
       const { token } = response.data;
       login(token);  // Set authentication state
@@ -61,6 +63,8 @@ export default function LoginPage() {
       } else {
         form.setError("root.serverError", { message: 'Network error. Please try again later.' });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -104,7 +108,7 @@ export default function LoginPage() {
                 <p className="text-red-500">{form.formState.errors.root.serverError.message}</p>
               )}
               <div className='flex justify-center items-center'>
-              <Button type="submit" >Log In</Button>
+              <Button type="submit"  disabled={loading}> {loading ? 'Logging In...' : 'Log In'}</Button>
               </div>
             </form>
           </Form>
